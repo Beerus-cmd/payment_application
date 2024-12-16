@@ -20,7 +20,7 @@ pipeline {
         stage('Code Quality Check') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh 'sonar-scanner -Dsonar.projectKey=payment-app -Dsonar.sources=./'
+                    sh 'npx sonar-scanner -Dsonar.projectKey=payment-app -Dsonar.sources=./'
                 }
             }
         }
