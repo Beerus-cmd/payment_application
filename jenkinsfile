@@ -23,13 +23,10 @@ pipeline {
         stage('Code Quality Check') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh """
-                        ${SONAR_SCANNER_HOME}/sonar-scanner \\
-                            -Dsonar.projectKey=payment-app \\
-                            -Dsonar.sources=./ \\
-                            -Dsonar.java.binaries=.
-                    """
-                }
+
+		sh 'npx sonar-scanner -Dsonar.projectKey=payment-app -Dsonar.sources=./ 
+               
+		 }
             }
         }
 
