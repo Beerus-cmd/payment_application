@@ -34,7 +34,7 @@ pipeline {
             steps {
                 dir('micro-services/frontend') {
                     sh """
-			npm install && ng build --prod
+			npm install && npm run build --prod
 		       """
                 }
             }
