@@ -8,6 +8,9 @@ pipeline {
         DOCKER_IMAGE = 'vishnusoman85/react-app' // Docker image name
         DOCKER_TAG = "1.0.${BUILD_NUMBER}" // Docker image tag
         NEXUS_CREDENTIALS_ID = 'nexuslogin' // Jenkins credentials ID for Nexus login
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Java 17 Home directory
+        PATH = "${env.JAVA_HOME}/bin:${env.PATH}" // Add Java to PATH
+        SONAR_SCANNER_HOME = '/opt/sonar-scanner/bin' // Sonar Scanner home
     }
 
     stages {
@@ -21,9 +24,12 @@ pipeline {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh """
-		 	/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=payment-app -Dsonar.sources=./
- 			curl -I http://13.127.99.114:9000
-		       """
+                        ${SONAR_SCANNER_HOME}/sonar-scanner \\
+                            -Dsonar.projectKey=payment-app \\
+                            -Dsonar.sources=./ \\
+                            -Dsonar.java.binaries=.
+                        curl -I http://13.127.99.114:9000
+                    """
                 }
             }
         }
