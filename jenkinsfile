@@ -21,7 +21,7 @@ pipeline {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh """
-			npx sonar-scanner -X -Dsonar.projectKey=payment-app -Dsonar.sources=./
+			npx sonar-scanner -Dsonar.projectKey=payment-app -Dsonar.sources=./
  			curl -I http://65.0.100.154:9000
 		       """
                 }
