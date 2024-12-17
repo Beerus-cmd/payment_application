@@ -57,11 +57,11 @@ pipeline {
 
         stage('Push to Nexus') {
             steps {
-                sh 'docker tag payment-app-frontend:latest 65.0.100.154:8086/repository/docker/payment-app-frontend:latest'
-                sh 'docker push 65.0.100.154:8086/repository/docker/payment-app-frontend:latest'
+                sh 'docker tag payment-app-frontend:latest 13.127.99.114:8086/repository/docker/payment-app-frontend:latest'
+                sh 'docker push 13.127.99.114:8086/repository/docker/payment-app-frontend:latest'
 
-                sh 'docker tag payment-app-backend:latest 65.0.100.154:8086/repository/docker/payment-app-backend:latest'
-                sh 'docker push 65.0.100.154:8086/repository/docker/payment-app-backend:latest'
+                sh 'docker tag payment-app-backend:latest 13.127.99.114:8086/repository/docker/payment-app-backend:latest'
+                sh 'docker push 13.127.99.114:8086/repository/docker/payment-app-backend:latest'
             }
         }
     }
