@@ -28,7 +28,6 @@ pipeline {
                             -Dsonar.projectKey=payment-app \\
                             -Dsonar.sources=./ \\
                             -Dsonar.java.binaries=.
-                        curl -I http://13.127.99.114:9000
                     """
                 }
             }
