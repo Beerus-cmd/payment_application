@@ -33,8 +33,9 @@ pipeline {
         stage('Frontend Build') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
-                    sh 'ng build --prod'
+                    sh """
+			cd payment_application && npm install && ng build --prod
+		       """
                 }
             }
         }
