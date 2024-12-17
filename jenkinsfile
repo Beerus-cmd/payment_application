@@ -42,8 +42,8 @@ pipeline {
 
         stage('Backend Build') {
             steps {
-                dir('backend') {
-                    sh 'pip install -r requirements.txt'
+                dir('micro-services/backend/payment_service') {
+                    sh 'python3 -m pip install --break-system-packages -r requirements.txt'
                 }
             }
         }
