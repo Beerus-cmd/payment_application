@@ -34,8 +34,8 @@ pipeline {
             steps {
                 dir('micro-services/frontend') {
                     sh """
-			npm install && npm run build --prod
-		       """
+                        npm install && npm run build --prod
+                    """
                 }
             }
         }
@@ -50,9 +50,18 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
-
                 sh 'docker build -t payment-app-frontend:latest ./micro-services/frontend'
                 sh 'docker build -t payment-app-backend:latest ./micro-services/backend/payment_service'
+            }
+        }
+
+        stage('Push to Nexus') {
+            steps {
+                sh 'docker tag payment-app-frontend:latest 65.0.100.154:8086/repository/docker/payment-app-frontend:latest'
+                sh 'docker push 65.0.100.154:8086/repository/docker/payment-app-frontend:latest'
+
+                sh 'docker tag payment-app-backend:latest 65.0.100.154:8086/repository/docker/payment-app-backend:latest'
+                sh 'docker push 65.0.100.154:8086/repository/docker/payment-app-backend:latest'
             }
         }
     }
