@@ -50,8 +50,9 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker build -t payment-app-frontend:latest ./frontend'
-                sh 'docker build -t payment-app-backend:latest ./backend'
+
+                sh 'docker build -t payment-app-frontend:latest ./micro-services/frontend'
+                sh 'docker build -t payment-app-backend:latest ./micro-services/backend/payment_service'
             }
         }
     }
