@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'sonarserver' // Jenkins SonarQube configuration
-        NEXUS_URL = 'http://13.127.99.114:8086' // Nexus URL
+        NEXUS_URL = 'http://13.127.16.150:8086' // Nexus URL updated to http://13.127.16.150:8086
         DOCKER_IMAGE = 'vishnusoman85/react-app' // Docker image name
         DOCKER_TAG = "1.0.${BUILD_NUMBER}" // Docker image tag
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Java 17 Home directory
@@ -55,23 +55,30 @@ pipeline {
 
         stage('Push to Nexus') {
             steps {
-                // Login to Docker registry
-                withCredentials([usernamePassword(credentialsId: 'docker_registry_creds', 
-                                                 usernameVariable: 'REGISTRY_USER', 
-                                                 passwordVariable: 'REGISTRY_PASS')]) {
-                    sh 'docker login -u $REGISTRY_USER -p $REGISTRY_PASS 13.127.99.114:8086'
+                script {
+                    // Login to Docker registry
+                    withCredentials([usernamePassword(credentialsId: 'docker_registry_creds', 
+                                                     usernameVariable: 'REGISTRY_USER', 
+                                                     passwordVariable: 'REGISTRY_PASS')]) {
+                        sh '''
+                            echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin http://13.127.16.150:8086
+                        '''
 
-                    // Tag and push frontend Docker image
-                    sh 'docker tag payment-app-frontend:latest 13.127.99.114:8086/repository/docker/payment-app-frontend:latest'
-                    
-                    sh 'docker push 13.127.99.114:8086/repository/docker/payment-app-frontend:latest'
+                        // Tag and push frontend Docker image
+                        sh '''
+                            docker tag payment-app-frontend:latest http://13.127.16.150:8086/repository/docker/payment-app-frontend:latest
+                            docker push http://13.127.16.150:8086/repository/docker/payment-app-frontend:latest
+                        '''
 
-                    // Tag and push backend Docker image
-                    sh 'docker tag payment-app-backend:latest 13.127.99.114:8086/repository/docker/payment-app-backend:latest'
-                    sh 'docker push 13.127.99.114:8086/repository/docker/payment-app-backend:latest'
+                        // Tag and push backend Docker image
+                        sh '''
+                            docker tag payment-app-backend:latest http://13.127.16.150:8086/repository/docker/payment-app-backend:latest
+                            docker push http://13.127.16.150:8086/repository/docker/payment-app-backend:latest
+                        '''
 
-                    // Logout from Docker registry
-                    sh 'docker logout 13.127.99.114:8086'
+                        // Logout from Docker registry
+                        sh 'docker logout http://13.127.16.150:8086'
+                    }
                 }
             }
         }
