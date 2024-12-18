@@ -72,7 +72,7 @@ pipeline {
 
                         // Tag and push backend Docker image
                         sh '''
-                            docker tag payment-app-backend:latest http://13.127.16.150:8086/repository/docker/payment-app-backend:latest
+                            docker tag payment-app-backend:latest 13.127.16.150:8086/repository/docker/payment-app-backend:latest
                             docker push 13.127.16.150:8086/repository/docker/payment-app-backend:latest
                         '''
 
