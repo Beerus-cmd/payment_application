@@ -1,0 +1,121 @@
+version: '3.7'
+
+services:
+  # Frontend Service
+  frontend:
+    image: 13.127.16.150:8086/repository/docker/payment-app-frontend:latest
+    container_name: payment-app-frontend
+    ports:
+      - "82:80"
+    networks:
+      - app_network
+    depends_on:
+      - backend
+
+  # Backend Service
+  backend:
+    image: 13.127.16.150:8086/repository/docker/payment-app-backend:latest
+    container_name: payment-app-backend
+    ports:
+      - "5000:5000"
+    networks:
+      - app_network
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=rootpassword
+    depends_on:
+      - db
+      - redis
+
+  # Redis Service (Session Management)
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks:
+      - app_network
+    ports:
+      - "6379:6379"
+
+  # Database Service (Example with MySQL)
+  db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: payment_app_db
+    networks:
+      - app_network
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Elasticsearch Service (for ELK Stack)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    networks:
+      - app_network
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  # Logstash Service (for ELK Stack)
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.0
+    container_name: logstash
+    networks:
+      - app_network
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash/config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+
+  # Kibana Service (for ELK Stack)
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    container_name: kibana
+    networks:
+      - app_network
+    ports:
+      - "5601:5601"
+
+  # Prometheus Service (for Metrics Monitoring)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    networks:
+      - app_network
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  # Grafana Service (for Metrics Visualization)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    networks:
+      - app_network
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+  es_data:
+    driver: local
+
