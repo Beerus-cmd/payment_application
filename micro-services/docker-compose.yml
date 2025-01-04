@@ -62,7 +62,7 @@ services:
   nginx:
     build: ./nginx
     ports:
-      - "8082:80"
+      - "80:80"
     depends_on:
       - auth-service
       - payment-service
@@ -111,9 +111,6 @@ services:
     networks:
       - app-network
 
-
-  
-
 volumes:
   mongodb_data:
   elasticsearch_data:
@@ -123,3 +120,4 @@ volumes:
 networks:
   app-network:
     driver: bridge
+

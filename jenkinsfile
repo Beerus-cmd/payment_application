@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'sonarserver' // Jenkins SonarQube configuration
-        NEXUS_URL = 'http://3.111.214.179:8086' // Nexus URL updated to http://3.111.214.179:8086
+        NEXUS_URL = 'http://13.235.133.63:8086' // Nexus URL updated to http://13.235.133.63:8086
         DOCKER_IMAGE = 'vishnusoman85/react-app' // Docker image name
         DOCKER_TAG = "1.0.${BUILD_NUMBER}" // Docker image tag
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Java 17 Home directory
@@ -61,23 +61,23 @@ pipeline {
                                                      usernameVariable: 'REGISTRY_USER', 
                                                      passwordVariable: 'REGISTRY_PASS')]) {
                         sh '''
-                            echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin http://3.111.214.179:8086
+                            echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin http://13.235.133.63:8086
                         '''
 
                         // Tag and push frontend Docker image
                         sh '''
-                            docker tag payment-app-frontend:latest 3.111.214.179:8086/repository/docker/payment-app-frontend:latest
-                            docker push 3.111.214.179:8086/repository/docker/payment-app-frontend:latest
+                            docker tag payment-app-frontend:latest 13.235.133.63:8086/repository/docker/payment-app-frontend:latest
+                            docker push 13.235.133.63:8086/repository/docker/payment-app-frontend:latest
                         '''
 
                         // Tag and push backend Docker image
                         sh '''
-                            docker tag payment-app-backend:latest 3.111.214.179:8086/repository/docker/payment-app-backend:latest
-                            docker push 3.111.214.179:8086/repository/docker/payment-app-backend:latest
+                            docker tag payment-app-backend:latest 13.235.133.63:8086/repository/docker/payment-app-backend:latest
+                            docker push 13.235.133.63:8086/repository/docker/payment-app-backend:latest
                         '''
 
                         // Logout from Docker registry
-                        sh 'docker logout 3.111.214.179:8086'
+                        sh 'docker logout 13.235.133.63:8086'
                     }
                 }
             }
